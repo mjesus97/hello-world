@@ -1,0 +1,116 @@
+####Funcion anidadas:
+Una funcion dentro de otra.
+´´´
+def operacion(x, y):
+    def operacion_interna(z):
+        return z ** 2
+    return x + y + operacion_interna(x + y)
+´´´
+
+Todas las variables locales de la funcion de mas afuera puede usarlas la de adentro
+Puedo no llamar a la de adentro.
+esto se hace cuando una funcion muy especifica se va a utilizar solo dentro de esa funcion.
+
+####Funcion como argumento de otra funcion:
+´´´
+def operacion(x, y, funcion):
+    return x + y + funcion(x + y)
+
+def cubo(x):
+    return x ** 3
+
+print(operacion(3, 5, cubo))
+´´´
+
+#### Funcion retorna otra función:(clousure)
+´´´
+def fabricar_funcion():
+    def nueva_funcion(x, y):
+        return x * y
+    return nueva_funcion
+
+funcion = fabricar_funcion()
+print(funcion(3, 5))
+´´´
+
+-----
+Solo puede ingresar al scope en modo de lectura, es decir, no puede modificar x, solo leerlo
+
+´´´
+def fabricar_funcion(x):
+    def nueva_funcion():
+        return 2 * x
+    return nueva_funcion
+
+
+funcion = fabricar_funcion(3)
+print(funcion())
+´´´
+-> 6
+
+
+
+###### Decoradores
+*Añade funcionalidad a un objeto
+*permiten tomar una función ya implementada, agregar algún comportamiento o datos adicionales, y retornar una nueva función.
+*Para volver a la versión original de la función se quita el decorador.
+
+´´´
+def deco_function(original_function):
+    print("Entrando... (1)")
+
+    def wrapper_function():
+        print("Entrando... (2)")
+        original_function()
+        print("Saliendo... (2)")
+
+    print("Saliendo... (1)")
+    return wrapper_function
+new_print_paya = deco_function(print_paya)
+new_print_paya()
+´´´
+
+* #Son Funciones
+*Otra forma de escribirlos
+    ´´´
+     @deco_function
+     def print_paya():
+        print("¡Aro, aro, aro!")
+    ´´´
+
+* Para resolver el problema de los parametros en el wrapper se utilizan *args y **kwargs, significa que se le entregara una cantidad variable de argumentos.(No necesariamente tienen que tener esos nombres)
+´´´
+def deco_function(original_function):
+    print("Entrando... (1)")
+
+    def wrapper_function(*args, **kwargs):
+        print("Entrando... (2)")
+        original_function(*args, **kwargs)
+        print("Saliendo... (2)")
+
+    print("Saliendo... (1)")
+    return wrapper_function
+´´´
+
+* #Decoradores con parámetros
+´´´
+# Función creadora de decoradores. 
+# Recibe parámetros para personalizar nuestro decorador.
+def my_decorator_constructor(dec_parameters):
+    # Función decoradora. Recibe sólo una función.
+    def my_decorator(function): 
+        # Wrapper. Acá podemos leer los argumentos recibidos.
+        # en las dos funciones que están en niveles superiores.
+        def wrapped_function(*args, **kwargs):
+            # Hacer algo aquí antes de aplicar la función.
+            # Llamar a la función y obtener lo que retorna.
+            res = function(*args, **kwargs)
+            # Hacer algo después.
+            # Retornar un valor.
+            return res
+        return wrapped_function # Retorna la sub función.
+    return my_decorator # Retorna el decorador.
+´´´
+
+
+
